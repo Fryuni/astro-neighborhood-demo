@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  astro-integration-kit@0.12.0:
+    hash: 4v4zz77gzh2bbtoqgbwhce7oum
+    path: patches/astro-integration-kit@0.12.0.patch
+
 importers:
 
   .:
@@ -32,9 +37,12 @@ importers:
 
   packages/consumer:
     dependencies:
+      '@demo/sitemap':
+        specifier: workspace:^
+        version: link:../sitemap
       astro-integration-kit:
         specifier: ^0.12
-        version: 0.12.0(astro@4.7.0)
+        version: 0.12.0(patch_hash=4v4zz77gzh2bbtoqgbwhce7oum)(astro@4.7.0)
     devDependencies:
       '@types/node':
         specifier: ^20
@@ -56,7 +64,7 @@ importers:
     dependencies:
       astro-integration-kit:
         specifier: ^0.12
-        version: 0.12.0(astro@4.7.0)
+        version: 0.12.0(patch_hash=4v4zz77gzh2bbtoqgbwhce7oum)(astro@4.7.0)
     devDependencies:
       '@types/node':
         specifier: ^20
@@ -84,7 +92,7 @@ importers:
         version: link:../helpers
       astro-integration-kit:
         specifier: ^0.12
-        version: 0.12.0(astro@4.7.0)
+        version: 0.12.0(patch_hash=4v4zz77gzh2bbtoqgbwhce7oum)(astro@4.7.0)
     devDependencies:
       '@types/node':
         specifier: ^20
@@ -1733,7 +1741,7 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /astro-integration-kit@0.12.0(astro@4.7.0):
+  /astro-integration-kit@0.12.0(patch_hash=4v4zz77gzh2bbtoqgbwhce7oum)(astro@4.7.0):
     resolution: {integrity: sha512-fCtebn/vQF5bmPW5TxF/gRoDFZ1iuA1h0FJcv/e7S96gfFIYZjiQ5G+Mwv6i/X9Y27FTkMHXhuWtqE6xosCgBQ==}
     peerDependencies:
       '@astrojs/db': ^0.9.0
@@ -1746,6 +1754,7 @@ packages:
       pathe: 1.1.2
       recast: 0.23.6
     dev: false
+    patched: true
 
   /astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5):
     resolution: {integrity: sha512-YC24nK6/UNelVob+4RoJPDgZJdpaJarIU85D/UxCrlsYJlLqrW8hXq7A9T6BXNs+puF9pJrYlqaJNCRO+928XA==}
