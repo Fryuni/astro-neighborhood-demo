@@ -30,6 +30,28 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
 
+  packages/consumer:
+    dependencies:
+      astro-integration-kit:
+        specifier: ^0.12
+        version: 0.12.0(astro@4.7.0)
+    devDependencies:
+      '@types/node':
+        specifier: ^20
+        version: 20.12.7
+      astro:
+        specifier: ^4
+        version: 4.7.0(@types/node@20.12.7)(typescript@5.4.5)
+      tsup:
+        specifier: ^8
+        version: 8.0.2(typescript@5.4.5)
+      typescript:
+        specifier: ^5
+        version: 5.4.5
+      vite:
+        specifier: ^5
+        version: 5.2.10(@types/node@20.12.7)
+
   packages/helpers:
     dependencies:
       astro-integration-kit:
