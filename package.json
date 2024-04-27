@@ -13,6 +13,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
+    "dev": "pnpm --stream --parallel --filter '!@demo/root' -r dev",
     "format": "prettier -w \"**/*\" --ignore-unknown --cache"
   },
   "devDependencies": {
