@@ -1,0 +1,53 @@
+diff --git a/dist/core/define-integration.d.ts b/dist/core/define-integration.d.ts
+index 32b4d8bfc3013e465bd24a7bf4db905ec1f93223..4cf2a8ea7e91b965523d872afe577d0b0aa37eef 100644
+--- a/dist/core/define-integration.d.ts
++++ b/dist/core/define-integration.d.ts
+@@ -1,5 +1,6 @@
+ import { AstroIntegration } from 'astro';
+ import { z } from 'astro/zod';
++import { Prettify } from '../internal/types.js';
+ 
+ type AstroIntegrationSetupFn<Options extends z.ZodTypeAny> = (params: {
+     name: string;
+@@ -32,6 +33,6 @@ declare const defineIntegration: <TOptionsSchema extends z.ZodTypeAny = z.ZodNev
+ }) => (...args: [z.input<TOptionsSchema>] extends [
+     never
+ ] ? [
+-] : undefined extends z.input<TOptionsSchema> ? [options?: z.input<TOptionsSchema>] : [options: z.input<TOptionsSchema>]) => AstroIntegration & ReturnType<TSetup>;
++    ] : undefined extends z.input<TOptionsSchema> ? [options?: z.input<TOptionsSchema>] : [options: z.input<TOptionsSchema>]) => Prettify<Omit<ReturnType<TSetup>, 'hooks'>> & AstroIntegration;
+ 
+ export { defineIntegration };
+diff --git a/dist/core/with-plugins.d.ts b/dist/core/with-plugins.d.ts
+index a4615213746976483df63be9c99ba05cf4ffd9fc..b853b10566ad797346a5ec00890374961a1c9f60 100644
+--- a/dist/core/with-plugins.d.ts
++++ b/dist/core/with-plugins.d.ts
+@@ -1,14 +1,16 @@
+ import { AstroIntegration } from 'astro';
+ import { NonEmptyArray } from '../internal/types.js';
+ import { AnyPlugin, ExtendedHooks } from './types.js';
++import { Prettify } from '../internal/types.js';
+ 
+ type WithPluginsParams<TPlugins extends NonEmptyArray<AnyPlugin>> = {
+-    name: string;
+-    plugins: TPlugins;
+-    hooks: ExtendedHooks<TPlugins>;
++  name: string;
++  plugins: TPlugins;
++  hooks: ExtendedHooks<TPlugins>;
+ };
+-type WithPluginsReturn<Extensions> = Omit<Extensions, "name" | "plugins" | "hooks"> & {
+-    hooks: AstroIntegration["hooks"];
++
++export type WithPluginsReturn<Extensions> = Omit<Extensions, "name" | "plugins" | "hooks"> & {
++  hooks: AstroIntegration["hooks"];
+ };
+ /**
+  * Allows to extend hooks with custom parameters. Only used for advanced use-cases.
+@@ -18,6 +20,6 @@ type WithPluginsReturn<Extensions> = Omit<Extensions, "name" | "plugins" | "hook
+  * @param {Array<AnyPlugin>} params.plugins
+  * @param {import("astro".AstroIntegration["hooks"])} params.hooks
+  */
+-declare const withPlugins: <TPlugins extends [AnyPlugin, ...AnyPlugin[]], Extensions extends Record<any, unknown>>(options: WithPluginsParams<TPlugins> & Extensions) => WithPluginsReturn<Extensions>;
++declare const withPlugins: <TPlugins extends [AnyPlugin, ...AnyPlugin[]], Extensions extends Record<Exclude<string | symbol, 'name' | 'plugins' | 'hooks'>, unknown>>(options: WithPluginsParams<TPlugins> & Extensions) => WithPluginsReturn<Prettify<Omit<Extensions, "name" | "plugins" | "hooks">>>
+ 
+ export { withPlugins };
