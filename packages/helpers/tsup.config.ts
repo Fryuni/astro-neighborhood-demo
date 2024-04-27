@@ -1,11 +1,7 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-	entry: [
-		'src/index.ts',
-		'src/api.ts',
-		'src/hooks.ts',
-	],
+	entry: ['src/index.ts', 'src/api.ts', 'src/hooks.ts'],
 	format: ['esm'],
 	target: 'node18',
 	bundle: true,
