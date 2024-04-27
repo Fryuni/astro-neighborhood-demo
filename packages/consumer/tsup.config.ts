@@ -5,9 +5,7 @@ export default defineConfig({
 	format: ['esm'],
 	target: 'node18',
 	bundle: true,
-	dts: {
-		banner: '/// <reference path="../virtual.d.ts" />\n',
-	},
+	dts: true,
 	sourcemap: true,
 	clean: true,
 	splitting: true,

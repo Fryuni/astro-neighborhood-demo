@@ -1,5 +1,5 @@
 diff --git a/dist/core/define-integration.d.ts b/dist/core/define-integration.d.ts
-index 32b4d8bfc3013e465bd24a7bf4db905ec1f93223..4cf2a8ea7e91b965523d872afe577d0b0aa37eef 100644
+index 32b4d8bfc3013e465bd24a7bf4db905ec1f93223..45ba3ec0d9b33ba1a41ea0357f77bfd4abbbf2f7 100644
 --- a/dist/core/define-integration.d.ts
 +++ b/dist/core/define-integration.d.ts
 @@ -1,5 +1,6 @@
@@ -14,40 +14,66 @@ index 32b4d8bfc3013e465bd24a7bf4db905ec1f93223..4cf2a8ea7e91b965523d872afe577d0b
      never
  ] ? [
 -] : undefined extends z.input<TOptionsSchema> ? [options?: z.input<TOptionsSchema>] : [options: z.input<TOptionsSchema>]) => AstroIntegration & ReturnType<TSetup>;
-+    ] : undefined extends z.input<TOptionsSchema> ? [options?: z.input<TOptionsSchema>] : [options: z.input<TOptionsSchema>]) => Prettify<Omit<ReturnType<TSetup>, 'hooks'>> & AstroIntegration;
++    ] : undefined extends z.input<TOptionsSchema> ? [options?: z.input<TOptionsSchema>] : [options: z.input<TOptionsSchema>]) => Prettify<Omit<ReturnType<TSetup>, keyof AstroIntegration>> & AstroIntegration;
  
  export { defineIntegration };
+diff --git a/dist/core/define-plugin.d.ts b/dist/core/define-plugin.d.ts
+index 3ca8cc3fc73c3d9e73a55ab0489acba77606c5e2..0fc344c68a03faa7fa5ab660f8f7e9e63ed1c58c 100644
+--- a/dist/core/define-plugin.d.ts
++++ b/dist/core/define-plugin.d.ts
+@@ -1,6 +1,10 @@
+ import { PluginHooksConstraint, Plugin } from './types.js';
+ import 'astro';
+-import '../internal/types.js';
++import { Prettify } from '../internal/types.js';
++
++type ClearHooks<THooks extends PluginHooksConstraint> = {
++  [K in keyof THooks]: () => ReturnType<THooks[K]>
++};
+ 
+ /**
+  * Allows defining a type-safe plugin that can be used in {defineIntegration}.
+@@ -24,6 +28,6 @@ import '../internal/types.js';
+  * });
+  * ```
+  */
+-declare const definePlugin: <TName extends string, THooks extends PluginHooksConstraint>(plugin: Plugin<TName, THooks>) => Plugin<TName, THooks>;
++declare const definePlugin: <TName extends string, THooks extends PluginHooksConstraint>(plugin: Plugin<TName, THooks>) => Plugin<TName, Prettify<ClearHooks<THooks>>>;
+ 
+ export { definePlugin };
 diff --git a/dist/core/with-plugins.d.ts b/dist/core/with-plugins.d.ts
-index a4615213746976483df63be9c99ba05cf4ffd9fc..b853b10566ad797346a5ec00890374961a1c9f60 100644
+index a4615213746976483df63be9c99ba05cf4ffd9fc..d636bc2b27d9d54a3ffa61ddedfe7cff624ba7a6 100644
 --- a/dist/core/with-plugins.d.ts
 +++ b/dist/core/with-plugins.d.ts
-@@ -1,14 +1,16 @@
+@@ -1,15 +1,16 @@
  import { AstroIntegration } from 'astro';
  import { NonEmptyArray } from '../internal/types.js';
  import { AnyPlugin, ExtendedHooks } from './types.js';
 +import { Prettify } from '../internal/types.js';
  
- type WithPluginsParams<TPlugins extends NonEmptyArray<AnyPlugin>> = {
+-type WithPluginsParams<TPlugins extends NonEmptyArray<AnyPlugin>> = {
 -    name: string;
 -    plugins: TPlugins;
 -    hooks: ExtendedHooks<TPlugins>;
+-};
+-type WithPluginsReturn<Extensions> = Omit<Extensions, "name" | "plugins" | "hooks"> & {
+-    hooks: AstroIntegration["hooks"];
++type WithPluginsParams<TPlugins extends NonEmptyArray<AnyPlugin>> = Omit<AstroIntegration, 'hooks'> & {
 +  name: string;
 +  plugins: TPlugins;
 +  hooks: ExtendedHooks<TPlugins>;
  };
--type WithPluginsReturn<Extensions> = Omit<Extensions, "name" | "plugins" | "hooks"> & {
--    hooks: AstroIntegration["hooks"];
 +
-+export type WithPluginsReturn<Extensions> = Omit<Extensions, "name" | "plugins" | "hooks"> & {
-+  hooks: AstroIntegration["hooks"];
- };
++export type WithPluginsReturn<Extensions> = Extensions & Omit<AstroIntegration, 'name'>;
++
  /**
   * Allows to extend hooks with custom parameters. Only used for advanced use-cases.
-@@ -18,6 +20,6 @@ type WithPluginsReturn<Extensions> = Omit<Extensions, "name" | "plugins" | "hook
+  *
+@@ -18,6 +19,6 @@ type WithPluginsReturn<Extensions> = Omit<Extensions, "name" | "plugins" | "hook
   * @param {Array<AnyPlugin>} params.plugins
   * @param {import("astro".AstroIntegration["hooks"])} params.hooks
   */
 -declare const withPlugins: <TPlugins extends [AnyPlugin, ...AnyPlugin[]], Extensions extends Record<any, unknown>>(options: WithPluginsParams<TPlugins> & Extensions) => WithPluginsReturn<Extensions>;
-+declare const withPlugins: <TPlugins extends [AnyPlugin, ...AnyPlugin[]], Extensions extends Record<Exclude<string | symbol, 'name' | 'plugins' | 'hooks'>, unknown>>(options: WithPluginsParams<TPlugins> & Extensions) => WithPluginsReturn<Prettify<Omit<Extensions, "name" | "plugins" | "hooks">>>
++declare const withPlugins: <TPlugins extends [AnyPlugin, ...AnyPlugin[]], Extensions extends Record<string | symbol, unknown>>(options: WithPluginsParams<TPlugins> & Extensions) => WithPluginsReturn<Prettify<Omit<Extensions, keyof WithPluginsParams<any>>>>
  
  export { withPlugins };

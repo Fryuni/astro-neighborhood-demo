@@ -24,7 +24,14 @@ export default defineIntegration({
           const noAikApi = sitemap.fromConfig(config);
           noAikApi?.addExtraPage('/added-route');
         },
-      }
+      },
+      libHooks: {
+        'sitemap:pageCandidate': ({ page, omitPage }) => {
+          if (page.startsWith('/internal')) {
+            omitPage();
+          }
+        }
+      },
     });
   },
 });

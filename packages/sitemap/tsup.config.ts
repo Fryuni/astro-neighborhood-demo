@@ -6,7 +6,7 @@ export default defineConfig({
 	target: 'node18',
 	bundle: true,
 	dts: {
-		banner: '/// <reference path="../virtual.d.ts" />\n',
+		banner: '/// <reference path="../types.d.ts" />\n',
 	},
 	sourcemap: true,
 	clean: true,

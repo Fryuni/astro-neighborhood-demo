@@ -1,13 +1,15 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-	entry: ['src/index.ts'],
+	entry: [
+		'src/index.ts',
+		'src/api.ts',
+		'src/hooks.ts',
+	],
 	format: ['esm'],
 	target: 'node18',
 	bundle: true,
-	dts: {
-		banner: '/// <reference path="../virtual.d.ts" />\n',
-	},
+	dts: true,
 	sourcemap: true,
 	clean: true,
 	splitting: true,
