@@ -1,0 +1,28 @@
+{
+  "name": "demo",
+  "version": "0.0.0",
+  "private": true,
+  "keywords": [
+    "astro",
+    "extensions",
+    "integrations",
+    "dev-tools"
+  ],
+  "license": "MIT",
+  "author": "Luiz Ferraz <luiz@lferraz.com>",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "format": "prettier -w \"**/*\" --ignore-unknown --cache"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "^0.5.0",
+    "@changesets/cli": "^2.27.1",
+    "@types/node": "^20.11.30",
+    "prettier": "^3.2.5",
+    "prettier-plugin-astro": "^0.13.0",
+    "turbo": "^1.13.0",
+    "typescript": "^5.4.5"
+  },
+  "packageManager": "pnpm@8.15.7+sha256.50783dd0fa303852de2dd1557cd4b9f07cb5b018154a6e76d0f40635d6cee019"
+}
