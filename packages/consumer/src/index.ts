@@ -1,5 +1,5 @@
 import { defineIntegration, withPlugins } from 'astro-integration-kit';
-import sitemap from '@demo/sitemap';
+import sitemap from '@demo/sitemap-full';
 import { z } from 'astro/zod';
 
 export default defineIntegration({
