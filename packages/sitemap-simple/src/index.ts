@@ -12,9 +12,11 @@ export default defineIntegration({
 			hooks: {
 				'astro:config:setup': ({ updateConfig }) => {
 					updateConfig({
-						integrations: [sitemap({
-							customPages: extraPages,
-						})]
+						integrations: [
+							sitemap({
+								customPages: extraPages,
+							}),
+						],
 					});
 				},
 			},

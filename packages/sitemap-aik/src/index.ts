@@ -1,23 +1,28 @@
-import { defineIntegration, execLibHookSync } from '@demo/helpers';
+import { defineIntegration, hookProviderPlugin } from '@demo/helpers';
+import { addIntegration, withPlugins } from 'astro-integration-kit';
 import sitemap from '@astrojs/sitemap';
 import { z } from 'astro/zod';
 
 export default defineIntegration({
 	name: '@demo/sitemap',
 	optionsSchema: z.never().optional(),
-	setup() {
+	setup({ name }) {
 		const extraPages: string[] = [];
 
-		return {
+		return withPlugins({
+			name,
+			plugins: [hookProviderPlugin],
 			hooks: {
-				'astro:config:setup': ({ updateConfig, config }) => {
-					updateConfig({
-						integrations: [sitemap({
+				'astro:config:setup': (params) => {
+					const { execLibHookSync: execFromAik } = params;
+
+					addIntegration(params, {
+						integration: sitemap({
 							customPages: extraPages,
 							filter: (page) => {
 								let keepPage = true;
 
-								execLibHookSync(config.integrations, 'sitemap:pageCandidate', {
+								execFromAik('sitemap:pageCandidate', {
 									page,
 									omitPage: () => {
 										keepPage = false;
@@ -26,13 +31,13 @@ export default defineIntegration({
 
 								return keepPage;
 							},
-						})]
+						}),
 					});
 				},
 			},
 			addExtraPage(page: string) {
 				extraPages.push(page);
 			},
-		};
+		});
 	},
 });

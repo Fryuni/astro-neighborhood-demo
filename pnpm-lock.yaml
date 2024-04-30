@@ -82,7 +82,7 @@ importers:
         specifier: ^5
         version: 5.2.10(@types/node@20.12.7)
 
-  packages/sitemap-full:
+  packages/sitemap-aik:
     dependencies:
       '@astrojs/sitemap':
         specifier: ^3.1.4
@@ -110,7 +110,7 @@ importers:
         specifier: ^5
         version: 5.2.10(@types/node@20.12.7)
 
-  packages/sitemap-native:
+  packages/sitemap-full:
     dependencies:
       '@astrojs/sitemap':
         specifier: ^3.1.4
