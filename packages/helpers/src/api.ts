@@ -52,7 +52,7 @@ export function defineIntegration<
 	name: TName;
 	optionsSchema?: TOptionsSchema;
 	setup: AstroIntegrationSetupFn<TOptionsSchema, TApi>;
-}): NeighborIntegration<TName, TOptionsSchema, Prettify<Omit<TApi, 'hooks'>>> {
+}): NeighborIntegration<TName, TOptionsSchema, Prettify<Omit<TApi, keyof AstroIntegration>>> {
 	const factory = aikDefiner(params);
 
 	const integrationSymbol = Symbol(params.name);
